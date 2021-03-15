@@ -1,0 +1,10 @@
+{
+  "name": "GetArticleById",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.863.0",
+    "pg": "^8.5.1"
+  }
+}
