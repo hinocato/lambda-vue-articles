@@ -42,18 +42,6 @@ const validate = function (event) {
 }
 
 exports.handler = async function (event, context) {
-  console.log('connecting...');
-  try {
-		client.connect();
-	} catch (e) {
-		console.log(e);
-		const body = {
-			errorMessage: 'DB Connection Error' 
-		};
-		const response = new Response(400, false, body, {});
-		return response;
-	}
-  
 	try {
 		const params = validate(event);
 		const limit = params.size;
@@ -88,3 +76,6 @@ exports.handler = async function (event, context) {
 		client.end();
 	}
 }
+
+console.log('connecting...');
+client.connect();

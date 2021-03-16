@@ -1,4 +1,4 @@
-const { Client } = require('pg');
+const { Client, Pool } = require('pg');
 const client = new Client({
 	user: process.env.USER,
 	host: process.env.HOST,
@@ -17,6 +17,13 @@ class Response {
 	}
 }
 
+class ErrorBody {
+	constructor(errorMessage, errorCode) {
+		this.errorMessage = errorMessage;
+		this.errorCode = errorCode;
+	}
+}
+
 /* 簡単なバリデーションで実装 */
 const validate = function (event) {
 	if (!event || !event.pathParameters || !event.pathParameters.id) {
@@ -29,25 +36,12 @@ const validate = function (event) {
 }
 
 exports.handler = async function (event, context) {
-  console.log('connecting...');
-  try {
-		client.connect();
-	} catch (e) {
-		console.log(e);
-		const body = {
-			errorMessage: 'DB Connection Error' 
-		};
-		const response = new Response(400, false, body, {});
-		return response;
-	}
 
 	try {
 		validate(event);
 	} catch (e) {
-		console.log(e);
-		const body = {
-			errorMessage: e.message
-		};
+		console.error(e);
+		const body = new ErrorBody('DB Validation Error', 4002);
 		const response = new Response(400, false, body, {});
 		return response;
 	}
@@ -59,28 +53,36 @@ exports.handler = async function (event, context) {
 	try {
 		const id = params.id;
 		const query = `SELECT * FROM ${TABLE_NAME} WHERE id = ${id}`;
-		const body = await new Promise((resolve, reject) => {
+		const result = await new Promise((resolve, reject) => {
 			client.query(query, (err, res) => {
 				if (err) {
+					console.error(err);
 					reject(err);
 				}
 				if (!res) {
 					reject(new Error(`No Response "${query}"`));
 				}
+				console.log(res);
 				const result = res.rows[0];
 				resolve(result);
 			})
 		});
-		const response = new Response(200, false, body, {});
+
+		let response;
+		if (!result) {
+			const body = new ErrorBody(`[id:${id}]NotFound Resource`, 4003);
+			response = new Response(400, false, body, {});
+			return response;
+		}
+
+		response = new Response(200, false, result, {});
 		return response;
 	} catch (e) {
 		console.log(e);
-		const body = {
-			errorMessage: 'DB Query Error' 
-		};
-		const response = new Response(400, false, body, {});
+		const body = new ErrorBody('DB Query Error', 4004);
+		response = new Response(400, false, body, {});
 		return response;
-	} finally {
-		client.end();
 	}
 }
+
+client.connect();
