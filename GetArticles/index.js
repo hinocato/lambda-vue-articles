@@ -72,8 +72,6 @@ exports.handler = async function (event, context) {
 		};
 		const response = new Response(400, false, body, {});
 		return response;
-	} finally {
-		client.end();
 	}
 }
 
