@@ -17,33 +17,51 @@ class Response {
 	}
 }
 
-/* 簡単なバリデーションで実装 */
-const validate = function (event) {
-	if (!event || !event.queryStringParameters || !event.queryStringParameters.page) {
-		throw new Error('[queryStringParameter:page:notFound] Validatation Error');
-	}
-
-	if (!event || !event.queryStringParameters || !event.queryStringParameters.size) {
-		throw new Error('[queryStringParameter:size:notFound] Validatation Error');
-	}
-
-	if (!Number.isInteger(event.queryStringParameters.page - 0)) {
-		throw new Error('[queryStringParameter:page:notInteger] Validatation Error');
-	}
-
-	if (!Number.isInteger(event.queryStringParameters.size - 0)) {
-		throw new Error('[queryStringParameter:size:notInteger] Validatation Error');
-	}
-
-	return {
-		size: event.queryStringParameters.size,
-		page: event.queryStringParameters.page,
+class ErrorBody {
+	constructor(errorMessage, errorCode) {
+		this.errorMessage = errorMessage;
+		this.errorCode = errorCode;
 	}
 }
 
+/* 簡単なバリデーションで実装 */
+const validate = function (event) {
+	if (!event || !event.queryStringParameters) {
+		return; // 未指定を許可		
+	}
+
+	if (!event.queryStringParameters.page) {
+		return; // 未指定を許可
+	} else if (!Number.isInteger(event.queryStringParameters.page - 0)) {
+		throw new Error('[queryStringParameter:page:notInteger] Validatation Error');
+	}
+
+	if (!event.queryStringParameters.size) {
+		return; // 未指定を許可
+	} else if (!Number.isInteger(event.queryStringParameters.size - 0)) {
+		throw new Error('[queryStringParameter:size:notInteger] Validatation Error');
+	}
+
+	return;
+}
+
 exports.handler = async function (event, context) {
+
 	try {
-		const params = validate(event);
+		validate(event);
+	} catch (e) {
+		console.error(e);
+		const body = new ErrorBody('DB Validation Error', 4002);
+		const response = new Response(400, false, body, {});
+		return response;
+	}
+
+	const params = {
+		size: event.queryStringParameters?.size || 10,
+		page: event.queryStringParameters?.page || 1,
+	};
+
+	try {
 		const limit = params.size;
 		const offset = params.size * (params.page - 1);
 		const query = `SELECT * FROM ${TABLE_NAME} limit ${limit} offset ${offset}`;
@@ -56,9 +74,9 @@ exports.handler = async function (event, context) {
 					reject(new Error(`No Response "${query}"`));
 				}
 				const result = {
-					items: res.rows,
+					items: res.rows || [],
 					size: res.rowCount,
-					page: params.size
+					page: params.page
 				}
 				resolve(result);
 			})
@@ -66,10 +84,8 @@ exports.handler = async function (event, context) {
 		const response = new Response(200, false, body, {});
 		return response;
 	} catch (e) {
-		console.log(e);
-		const body = {
-			errorMessage: 'DB Query Error' 
-		};
+		console.error(e);
+		const body = new ErrorBody('DB Query Error', 4004);
 		const response = new Response(400, false, body, {});
 		return response;
 	}
