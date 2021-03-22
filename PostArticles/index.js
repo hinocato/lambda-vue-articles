@@ -39,7 +39,7 @@ const validate = function (event) {
 
 exports.handler = async function (event, context) {
 	try {
-		// event.body = JSON.parse(event.body || {});
+		event.body = JSON.parse(event.body || {});
 		validate(event);
 	} catch (e) {
 		console.error(e);
@@ -51,7 +51,7 @@ exports.handler = async function (event, context) {
 	const params = {
 		title: event.body.title,
 		text: event.body.text,
-		thumbnailUrl: event.body.thumbnailUrl,
+		thumbnail_url: event.body.thumbnail_url,
 	};
 
 	try {

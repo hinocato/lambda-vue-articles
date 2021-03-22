@@ -57,7 +57,7 @@ exports.handler = async function (event, context) {
 		id: event.pathParameters.id,
 		title: event.body.title,
 		text: event.body.text,
-		thumbnailUrl: event.body.thumbnailUrl,
+		thumbnail_url: event.body.thumbnail_url,
 	};
 
 	try {
