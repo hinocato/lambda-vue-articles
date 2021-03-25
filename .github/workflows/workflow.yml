@@ -24,5 +24,9 @@ jobs:
       - name: Upload
         env:
           S3_BUCKET_URI: ${{ secrets.AWS_S3_UPLOAD_URI }}
-        run: ls
+        run: |
+          cd DeleteArticleById &&
+          yarn install &&
+          zip delete-article-by-id node_modules/* index.js
+
 
