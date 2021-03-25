@@ -1,0 +1,30 @@
+name: S3UploadWorkflow
+
+on:
+  push:
+    branches: [develop]
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Npm
+        uses: actions/setup-node@v1
+        with: node-version: '14.x'
+      - name: S3Upload
+        users: 
+        env:
+          ACCESS_KEY: ${{ secrets.AWS_USER_ACCESS_KEY }}
+          SECRET_ACCESS_KEY: ${{ secrets.AWS_USER_SECRET_KEY }}
+          REGION: ${{ secrets.AWS_REGION }}
+          S3_BUCKET_NAME: ${{ secrets.AWS_S3_UPLOAD_BUCKET_NAME }}
+        with:
+          aws-acccess-key-id: ${{ ACCESS_KEY }}
+          aws-secret-access-key: ${{ SECRET_ACCESS_KEY }}
+          aws-region: ${{ REGION }}
+        run: |
+          # ZIPファイル化
+          ls
