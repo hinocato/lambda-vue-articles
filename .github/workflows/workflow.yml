@@ -28,6 +28,6 @@ jobs:
           cd DeleteArticleById &&
           yarn install &&
           zip delete-article-by-id node_modules/* index.js &&
-          s3 mv delete-article-by-id $S3_BUCKET_URI
+          aws s3 mv delete-article-by-id $S3_BUCKET_URI
 
 
