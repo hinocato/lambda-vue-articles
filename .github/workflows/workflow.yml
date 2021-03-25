@@ -24,10 +24,15 @@ jobs:
       - name: Upload
         env:
           S3_BUCKET_URI: ${{ secrets.AWS_S3_UPLOAD_URI }}
+          GET_ARTICLE_BY_ID: GetArticleById
+          PUT_ARTICLE_BY_ID: PutArticleById
+          DELETE_ARTICLE_BY_ID: DeleteArticleById
+          GET_ARTICLES: GetArticles
+          POST_ARTICLES: PostArticles
         run: |
-          cd DeleteArticleById &&
+          # GetArticleById
+          cd $GET_ARTICLE_BY_ID &&
           yarn install &&
-          zip delete-article-by-id node_modules/* index.js &&
-          aws s3 mv delete-article-by-id.zip $S3_BUCKET_URI
-
+          zip $GET_ARTICLE_BY_ID node_modules/* index.js &&
+          aws s3 mv $GET_ARTICLE_BY_ID.zip $S3_BUCKET_URI
 
