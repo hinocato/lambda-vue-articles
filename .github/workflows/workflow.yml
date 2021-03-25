@@ -34,7 +34,7 @@ jobs:
           cd $GET_ARTICLE_BY_ID &&
           yarn install &&
           zip $GET_ARTICLE_BY_ID node_modules/* index.js &&
-          aws s3 mv $GET_ARTICLE_BY_ID.zip $S3_BUCKET_URI &&
+          aws s3 cp $GET_ARTICLE_BY_ID.zip $S3_BUCKET_URI &&
           aws lambda update-function-code --function-name $GET_ARTICLE_BY_ID --zip-file fileb:/$PWD/$GET_ARTICLE_BY_ID.zip
           cd ..
 
