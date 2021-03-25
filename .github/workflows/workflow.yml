@@ -11,16 +11,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Npm
+      - name: SetupNode
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
       - name: S3Upload
         env:
           S3_BUCKET_URI: ${{ secrets.AWS_S3_UPLOAD_URI }}
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-acccess-key-id: ${{ secrets.AWS_USER_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_USER_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
         run: ls
-        
+
