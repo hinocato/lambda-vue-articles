@@ -34,7 +34,6 @@ jobs:
           cd $GET_ARTICLE_BY_ID &&
           yarn install &&
           zip $GET_ARTICLE_BY_ID node_modules/* index.js &&
-          aws s3 cp $GET_ARTICLE_BY_ID.zip $S3_BUCKET_URI &&
           aws lambda update-function-code --function-name $GET_ARTICLE_BY_ID --zip-file fileb://$PWD/$GET_ARTICLE_BY_ID.zip > /dev/null 2>&1
           cd ..
 
@@ -42,26 +41,26 @@ jobs:
           cd $PUT_ARTICLE_BY_ID &&
           yarn install &&
           zip $PUT_ARTICLE_BY_ID node_modules/* index.js &&
-          aws s3 mv $PUT_ARTICLE_BY_ID.zip $S3_BUCKET_URI &&
+          aws lambda update-function-code --function-name $PUT_ARTICLE_BY_ID --zip-file fileb://$PWD/$PUT_ARTICLE_BY_ID.zip > /dev/null 2>&1
           cd ..
 
           # DeleteArticleById
           cd $DELETE_ARTICLE_BY_ID &&
           yarn install &&
           zip $DELETE_ARTICLE_BY_ID node_modules/* index.js &&
-          aws s3 mv $DELETE_ARTICLE_BY_ID.zip $S3_BUCKET_URI &&
+          aws lambda update-function-code --function-name $DELETE_ARTICLE_BY_ID --zip-file fileb://$PWD/$DELETE_ARTICLE_BY_ID.zip > /dev/null 2>&1
           cd ..
 
           # GetArticles
           cd $GET_ARTICLES &&
           yarn install &&
           zip $GET_ARTICLES node_modules/* index.js &&
-          aws s3 mv $GET_ARTICLES.zip $S3_BUCKET_URI &&
+          aws lambda update-function-code --function-name $GET_ARTICLES --zip-file fileb://$PWD/$GET_ARTICLES.zip > /dev/null 2>&1
           cd ..
 
           # PostArticles
           cd $POST_ARTICLES &&
           yarn install &&
           zip $POST_ARTICLES node_modules/* index.js &&
-          aws s3 mv $POST_ARTICLES.zip $S3_BUCKET_URI &&
+          aws lambda update-function-code --function-name $POST_ARTICLES --zip-file fileb://$PWD/$POST_ARTICLES.zip > /dev/null 2>&1
           cd ..

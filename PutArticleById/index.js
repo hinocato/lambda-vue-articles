@@ -29,15 +29,15 @@ const validate = function (event) {
     const pathParameters = event.pathParameters;
     const body = event.body;
 	if (!pathParameters || !Number.isInteger(pathParameters.id - 0)) {
-		throw new Error('[queryStringParameter:page:notInteger] Validatation Error');
+		throw new Error('[pathParameters:page:notInteger] Validatation Error');
 	}
 
     if (!body || !body.title) {
-		throw new Error('[queryStringParameter:page:notInteger] Validatation Error');
+		throw new Error('[body:title:notNull] Validatation Error');
 	}
 
     if (!body.text) {
-		throw new Error('[queryStringParameter:page:notInteger] Validatation Error');
+		throw new Error('[body:text:notNull] Validatation Error');
 	}
 	return;
 }
