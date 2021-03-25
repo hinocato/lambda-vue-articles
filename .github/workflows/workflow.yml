@@ -9,13 +9,12 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Npm
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
       - name: S3Upload
+        uses: actions/checkout@v2
         env:
           S3_BUCKET_URI: ${{ secrets.AWS_S3_UPLOAD_URI }}
         with:
