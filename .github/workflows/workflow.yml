@@ -36,3 +36,26 @@ jobs:
           zip $GET_ARTICLE_BY_ID node_modules/* index.js &&
           aws s3 mv $GET_ARTICLE_BY_ID.zip $S3_BUCKET_URI
 
+          # PutArticleById
+          cd $PUT_ARTICLE_BY_ID &&
+          yarn install &&
+          zip $PUT_ARTICLE_BY_ID node_modules/* index.js &&
+          aws s3 mv $PUT_ARTICLE_BY_ID.zip $S3_BUCKET_URI
+
+          # DeleteArticleById
+          cd $DELETE_ARTICLE_BY_ID &&
+          yarn install &&
+          zip $DELETE_ARTICLE_BY_ID node_modules/* index.js &&
+          aws s3 mv $DELETE_ARTICLE_BY_ID.zip $S3_BUCKET_URI
+
+          # GetArticles
+          cd $GET_ARTICLES &&
+          yarn install &&
+          zip $GET_ARTICLES node_modules/* index.js &&
+          aws s3 mv $GET_ARTICLES.zip $S3_BUCKET_URI
+
+          # PostArticles
+          cd $POST_ARTICLES &&
+          yarn install &&
+          zip $POST_ARTICLES node_modules/* index.js &&
+          aws s3 mv $POST_ARTICLES.zip $S3_BUCKET_URI
